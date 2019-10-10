@@ -8,6 +8,7 @@ ifneq ($(PRODUCT_IMX_CAR),true)
 include $(FSL_PROPRIETARY_PATH)/fsl-proprietary/sensor/fsl-sensor.mk
 endif
 
+#TODO check if we need to add condition for PRODUCT_IMX_ECO
 ifneq ($(BOARD_OTA_BOOTLOADERIMAGE),)
   INSTALLED_RADIOIMAGE_TARGET += $(PRODUCT_OUT)/bootloader.img
   BOARD_PACK_RADIOIMAGES += bootloader.img

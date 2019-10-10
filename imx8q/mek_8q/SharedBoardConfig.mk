@@ -14,6 +14,14 @@ ifeq ($(TARGET_PRODUCT),mek_8q_car2)
 # Remove below defination will make i.MX8QM boot from A53 core.
   IMX8QM_A72_BOOT := true
 endif
+ifeq ($(TARGET_PRODUCT),mek_8q_car_eco)
+  PRODUCT_IMX_CAR := true
+  # the env setting in mek_8q_car to make the build without M4 image
+  PRODUCT_IMX_CAR_M4 := false
+# i.MX8QM  will boot from A72 core on Android Auto by default.
+# Remove below defination will make i.MX8QM boot from A53 core.
+  IMX8QM_A72_BOOT := true
+endif
 
 ifeq ($(PRODUCT_IMX_CAR),true)
   KERNEL_NAME := Image.lz4

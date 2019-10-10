@@ -2,21 +2,8 @@
 # Product-specific compile-time definitions.
 #
 
-IMX_DEVICE_PATH := device/fsl/imx8q/mek_8q
-
-ifeq ($(PRODUCT_IMX_CAR),true)
-  AB_OTA_PARTITIONS += bootloader
-  BOARD_OTA_BOOTLOADERIMAGE := out/target/product/mek_8q/obj/UBOOT_COLLECTION/bootloader-imx8qm.img
-  ifeq ($(OTA_TARGET),8qxp)
-    BOARD_OTA_BOOTLOADERIMAGE := out/target/product/mek_8q/obj/UBOOT_COLLECTION/bootloader-imx8qxp.img
-  endif
-endif
-
-include device/fsl/imx8q/BoardConfigCommon.mk
-
-ifeq ($(PRODUCT_IMX_ECO),true)
-  include device/fsl/imx8q/mek_8q/BoardConfig_eco.mk
-else
+#override
+BOARD_KERNEL_BASE := 0xC0200000
 
 BUILD_TARGET_FS ?= ext4
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -119,20 +106,15 @@ BOARD_KERNEL_CMDLINE := init=/init androidboot.hardware=freescale firmware_class
 BOARD_KERNEL_CMDLINE += androidboot.fbTileSupport=enable
 
 # memory config
-BOARD_KERNEL_CMDLINE += cma=800M@0x960M-0xe00M transparent_hugepage=never
+BOARD_KERNEL_CMDLINE += cma=400M@0xd60M-0xef0M transparent_hugepage=never
 
 # display config
 BOARD_KERNEL_CMDLINE += androidboot.lcd_density=240 androidboot.primary_display=imx-drm
 
 # wifi config
 BOARD_KERNEL_CMDLINE += androidboot.wificountrycode=CN
-
-ifeq ($(PRODUCT_IMX_CAR),true)
-# automotive config
-BOARD_KERNEL_CMDLINE += galcore.contiguousSize=33554432 video=HDMI-A-2:d
-else
-BOARD_KERNEL_CMDLINE += androidboot.console=ttyLP0
-endif
+# ecockpit A72 specific
+BOARD_KERNEL_CMDLINE += androidboot.console=ttyLP2
 
 ifeq ($(TARGET_USERIMAGES_USE_UBIFS),true)
 ifeq ($(TARGET_USERIMAGES_USE_EXT4),true)
@@ -141,80 +123,10 @@ endif
 endif
 
 BOARD_PREBUILT_DTBOIMAGE := out/target/product/mek_8q/dtbo-imx8qm.img
-ifeq ($(OTA_TARGET),8qxp)
-BOARD_PREBUILT_DTBOIMAGE := out/target/product/mek_8q/dtbo-imx8qxp.img
-endif
+# imx8qm standard android; MIPI-HDMI display
+TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-a72.dtb
 
-ifeq ($(PRODUCT_IMX_CAR),true)
-  ifeq ($(PRODUCT_IMX_CAR_M4),true)
-    ifeq ($(IMX_NO_PRODUCT_PARTITION),true)
-      TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-car-no-product.dtb
-      TARGET_BOARD_DTS_CONFIG += imx8qxp:imx8qxp-mek-car-no-product.dtb
-    else
-      ifeq ($(IMX8QM_A72_BOOT),true)
-        # imx8qm auto android, A72 boot
-        TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-car-a72.dtb
-        # imx8qm auto android with multi-display, A72 boot
-        TARGET_BOARD_DTS_CONFIG += imx8qm-md:imx8qm-mek-car-md-a72.dtb
-      else
-        # imx8qm auto android
-        TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-car.dtb
-        # imx8qm auto android with multi-display
-        TARGET_BOARD_DTS_CONFIG += imx8qm-md:imx8qm-mek-car-md.dtb
-      endif
-      # imx8qm auto android virtualization
-      TARGET_BOARD_DTS_CONFIG += imx8qm-xen:imx8qm-mek-domu-car.dtb
-      # imx8qxp auto android
-      TARGET_BOARD_DTS_CONFIG += imx8qxp:imx8qxp-mek-car.dtb
-    endif # IMX_NO_PRODUCT_PARTITION
-  else #PRODUCT_IMX_CAR_M4
-    ifeq ($(IMX_NO_PRODUCT_PARTITION),true)
-      TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-car2-no-product.dtb
-      TARGET_BOARD_DTS_CONFIG += imx8qxp:imx8qxp-mek-car2-no-product.dtb
-    else
-      ifeq ($(IMX8QM_A72_BOOT),true)
-        # imx8qm auto android without m4 image, A72 boot
-        TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-car2-a72.dtb
-        # imx8qm auto android without m4 image for multi-display, A72 boot
-        TARGET_BOARD_DTS_CONFIG += imx8qm-md:imx8qm-mek-car2-md-a72.dtb
-      else
-        # imx8qm auto android without m4 image
-        TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-car2.dtb
-        # imx8qm auto android without m4 image for multi-display
-        TARGET_BOARD_DTS_CONFIG += imx8qm-md:imx8qm-mek-car2-md.dtb
-      endif
-      # imx8qxp auto android without m4 image
-      TARGET_BOARD_DTS_CONFIG += imx8qxp:imx8qxp-mek-car2.dtb
-    endif #IMX_NO_PRODUCT_PARTITION
-  endif #PRODUCT_IMX_CAR_M4
-else
-  ifeq ($(TARGET_USE_DYNAMIC_PARTITIONS),true)
-    ifeq ($(IMX_NO_PRODUCT_PARTITION),true)
-      TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-ov5640-no-product.dtb
-      TARGET_BOARD_DTS_CONFIG += imx8qxp:imx8qxp-mek-ov5640-no-product.dtb
-    else
-      # imx8qm standard android; MIPI-HDMI display
-      TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-ov5640.dtb
-      # imx8qm standard android; MIPI panel display
-      TARGET_BOARD_DTS_CONFIG += imx8qm-mipi-panel:imx8qm-mek-dsi-rm67191.dtb
-      # imx8qm standard android; HDMI display
-      TARGET_BOARD_DTS_CONFIG += imx8qm-hdmi:imx8qm-mek-hdmi.dtb
-      # imx8qm standard android; Multiple display
-      TARGET_BOARD_DTS_CONFIG += imx8qm-md:imx8qm-mek-md.dtb
-      # imx8qxp standard android; MIPI-HDMI display
-      TARGET_BOARD_DTS_CONFIG += imx8qxp:imx8qxp-mek-ov5640.dtb
-    endif #IMX_NO_PRODUCT_PARTITION
-  else
-    ifeq ($(IMX_NO_PRODUCT_PARTITION),true)
-      TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-ov5640-no-product-no-dynamic_partition.dtb
-      TARGET_BOARD_DTS_CONFIG += imx8qxp:imx8qxp-mek-ov5640-no-product-no-dynamic_partition.dtb
-    else
-      TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-ov5640-no-dynamic_partition.dtb
-      TARGET_BOARD_DTS_CONFIG += imx8qxp:imx8qxp-mek-ov5640-no-dynamic_partition.dtb
-    endif
-  endif
-endif #PRODUCT_IMX_CAR
-
+# in ecockpit u-boot is built externally
 
 BOARD_SEPOLICY_DIRS := \
        device/fsl/imx8q/sepolicy \
@@ -244,6 +156,7 @@ TARGET_USES_MKE2FS := true
 
 TARGET_BOARD_KERNEL_HEADERS := device/fsl/common/kernel-headers
 
+#TODO check if  EVS can work without M4
 ifeq ($(PRODUCT_IMX_CAR),true)
 BOARD_HAVE_IMX_EVS := true
 endif
@@ -252,6 +165,4 @@ endif
 BOARD_TYPE := MEK
 
 ALL_DEFAULT_INSTALLED_MODULES += $(BOARD_VENDOR_KERNEL_MODULES)
-
-endif # PRODUCT_IMX_ECO
 

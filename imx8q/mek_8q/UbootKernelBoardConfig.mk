@@ -58,6 +58,12 @@ else
   TARGET_KERNEL_DEFCONFIG := imx_v8_android_defconfig
 endif # PRODUCT_IMX_CAR
 
+#for ecockpit override defconfig
+ifeq ($(PRODUCT_IMX_ECO),true)
+	TARGET_BOOTLOADER_CONFIG := imx8qm:imx8qm_mek_a72_android_defconfig
+	TARGET_KERNEL_DEFCONFIG := ecockpit_android_defconfig
+endif
+
 # absolute path is used, not the same as relative path used in AOSP make
 TARGET_DEVICE_DIR := $(patsubst %/, %, $(dir $(realpath $(lastword $(MAKEFILE_LIST)))))
 
