@@ -28,6 +28,7 @@ $(shell touch $(IMX_DEVICE_PATH)/fstab.freescale)
 endif
 
 PRODUCT_IMX_ECO := true
+PRODUCT_IMX_TRUSTY := false
 
 # Overrides
 PRODUCT_NAME := mek_8q_eco
