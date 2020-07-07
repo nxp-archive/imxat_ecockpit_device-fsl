@@ -23,10 +23,12 @@ HOST_PREBUILT_TAG := $(HOST_OS)-${HOST_PREBUILT_ARCH}
 
 # firstly to include UbootKernelCommonConfig.mk, then SharedBoardConfig.mk, finally UbootKernelBoardConfig.mk
 
+include ${product_path}/${TARGET_PRODUCT}.mk
 include ${fsl_git_path}/common/imx_path/ImxPathConfig.mk
 include ${soc_path}/UbootKernelCommonConfig.mk
 include ${product_path}/SharedBoardConfig.mk
 include ${product_path}/UbootKernelBoardConfig.mk
+include ${product_path}/BoardConfig.mk
 
 include ${fsl_git_path}/common/build/kernel.mk
 include ${fsl_git_path}/common/build/uboot.mk
