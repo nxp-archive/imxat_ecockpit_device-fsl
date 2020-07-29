@@ -4,3 +4,6 @@ add_lunch_combo mek_8q_car-user
 add_lunch_combo mek_8q_car-userdebug
 add_lunch_combo mek_8q_car2-user
 add_lunch_combo mek_8q_car2-userdebug
+add_lunch_combo mek_8q_eco-eng
+add_lunch_combo mek_8q_eco-userdebug
+add_lunch_combo mek_8q_car_eco-eng

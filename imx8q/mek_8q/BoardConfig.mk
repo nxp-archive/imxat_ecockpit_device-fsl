@@ -12,6 +12,10 @@ ifeq ($(PREBUILT_FSL_IMX_CODEC),true)
 -include $(FSL_RESTRICTED_CODEC_PATH)/fsl-restricted-codec/imx_dsp/imx_dsp.mk
 endif
 
+ifeq ($(PRODUCT_IMX_ECO),true)
+include device/fsl/imx8q/mek_8q/BoardConfig_eco.mk
+else
+
 BUILD_TARGET_FS ?= ext4
 TARGET_USERIMAGES_USE_EXT4 := true
 
@@ -291,3 +295,5 @@ endif
 
 # define board type
 BOARD_TYPE := MEK
+
+endif # PRODUCT_IMX_ECO
