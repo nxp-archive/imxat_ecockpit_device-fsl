@@ -92,8 +92,8 @@ USE_GPU_ALLOCATOR := false
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 
 KERNEL_NAME := Image
-# ecockpit A72 reduce CMA to 400MB
-BOARD_KERNEL_CMDLINE := init=/init androidboot.hardware=freescale androidboot.fbTileSupport=enable cma=400M@0xd60M-0xef0M androidboot.primary_display=imx-drm firmware_class.path=/vendor/firmware transparent_hugepage=never androidboot.selinux=permissive loop.max_part=7
+# ecockpit A72 reduce CMA to 500MB
+BOARD_KERNEL_CMDLINE := init=/init androidboot.hardware=freescale androidboot.fbTileSupport=enable cma=500M@0xd60M-0xf60M androidboot.primary_display=imx-drm firmware_class.path=/vendor/firmware transparent_hugepage=never androidboot.selinux=permissive loop.max_part=7
 
 # Default wificountrycode
 BOARD_KERNEL_CMDLINE += androidboot.wificountrycode=CN
