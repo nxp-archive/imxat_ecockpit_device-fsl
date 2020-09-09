@@ -106,7 +106,7 @@ BOARD_KERNEL_CMDLINE := init=/init androidboot.hardware=freescale firmware_class
 BOARD_KERNEL_CMDLINE += androidboot.fbTileSupport=enable
 
 # memory config
-BOARD_KERNEL_CMDLINE += cma=400M@0xd60M-0xef0M transparent_hugepage=never
+BOARD_KERNEL_CMDLINE += cma=512M@0xd60M-0xf60M transparent_hugepage=never
 
 # display config
 BOARD_KERNEL_CMDLINE += androidboot.lcd_density=240 androidboot.primary_display=imx-drm
