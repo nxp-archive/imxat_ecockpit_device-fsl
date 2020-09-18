@@ -212,7 +212,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
      device/fsl/imx8q/mek_8q/powerhint_imx8qxp.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/powerhint_imx8qxp.json \
-     device/fsl/imx8q/mek_8q/powerhint_imx8qm.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/powerhint_imx8qm.json
+     device/fsl/imx8q/mek_8q/powerhint_imx8qm_eco.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/powerhint_imx8qm.json
 
 ifneq ($(PRODUCT_IMX_CAR),true)
 PRODUCT_COPY_FILES += \
@@ -307,16 +307,16 @@ PRODUCT_PACKAGES += \
 ifneq ($(PRODUCT_IMX_CAR),true)
 PRODUCT_COPY_FILES += \
     device/fsl/imx8q/mek_8q/thermal_info_config_imx8qxp.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/thermal_info_config_imx8qxp.json \
-    device/fsl/imx8q/mek_8q/thermal_info_config_imx8qm.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/thermal_info_config_imx8qm.json
+    device/fsl/imx8q/mek_8q/thermal_info_config_imx8qm_eco.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/thermal_info_config_imx8qm.json
 else
 ifneq ($(PRODUCT_IMX_CAR_M4),true)
 PRODUCT_COPY_FILES += \
     device/fsl/imx8q/mek_8q/thermal_info_config_imx8qxp_car2.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/thermal_info_config_imx8qxp.json \
-    device/fsl/imx8q/mek_8q/thermal_info_config_imx8qm_car2.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/thermal_info_config_imx8qm.json
+    device/fsl/imx8q/mek_8q/thermal_info_config_imx8qm_car_eco.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/thermal_info_config_imx8qm.json
 else
 PRODUCT_COPY_FILES += \
     device/fsl/imx8q/mek_8q/thermal_info_config_imx8qxp.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/thermal_info_config_imx8qxp.json \
-    device/fsl/imx8q/mek_8q/thermal_info_config_imx8qm.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/thermal_info_config_imx8qm.json
+    device/fsl/imx8q/mek_8q/thermal_info_config_imx8qm_eco.json:$(TARGET_COPY_OUT_VENDOR)/etc/configs/thermal_info_config_imx8qm.json
 endif
 endif
 
