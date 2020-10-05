@@ -159,6 +159,7 @@ define build_imx_uboot
 		if [ "$(PRODUCT_IMX_CAR)" != "true" ] || [ `echo $(2) | rev | cut -d '-' -f1` = "uuu" ] || [ "$(strip $(2))" = "imx8qm-xen-dom0" ]; then \
 			cp $(IMX_MKIMAGE_PATH)/imx-mkimage/$$MKIMAGE_PLATFORM/flash.bin $(UBOOT_COLLECTION)/u-boot-$(strip $(2)).imx; \
 		else \
+			cp $(IMX_MKIMAGE_PATH)/imx-mkimage/$$MKIMAGE_PLATFORM/flash.bin $(UBOOT_COLLECTION)/u-boot-$(strip $(2)).imx; \
 			cp $(IMX_MKIMAGE_PATH)/imx-mkimage/$$MKIMAGE_PLATFORM/boot-spl-container.img $(UBOOT_COLLECTION)/spl-$(strip $(2)).bin; \
 			cp $(IMX_MKIMAGE_PATH)/imx-mkimage/$$MKIMAGE_PLATFORM/u-boot-atf-container.img $(UBOOT_COLLECTION)/bootloader-$(strip $(2)).img; \
 		fi; \
