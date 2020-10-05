@@ -124,7 +124,11 @@ endif
 
 BOARD_PREBUILT_DTBOIMAGE := out/target/product/mek_8q/dtbo-imx8qm.img
 # imx8qm standard android; MIPI-HDMI display
-TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-a72.dtb
+ifeq ($(PRODUCT_IMX_CAR),true)
+	TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-a72-car.dtb
+else
+	TARGET_BOARD_DTS_CONFIG := imx8qm:imx8qm-mek-a72.dtb
+endif
 
 # in ecockpit u-boot is built externally
 
