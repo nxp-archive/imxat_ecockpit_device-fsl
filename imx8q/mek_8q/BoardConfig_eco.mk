@@ -51,6 +51,49 @@ WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 BOARD_VENDOR_KERNEL_MODULES += \
                             $(KERNEL_OUT)/drivers/net/wireless/qcacld-2.0/wlan.ko
 
+ifeq ($(PRODUCT_IMX_CAR_M4),true)
+BOARD_VENDOR_KERNEL_MODULES += \
+                            $(KERNEL_OUT)/drivers/extcon/extcon-ptn5150.ko \
+                            $(KERNEL_OUT)/drivers/hid/usbhid/usbhid.ko \
+                            $(KERNEL_OUT)/drivers/staging/typec/tcpci.ko \
+                            $(KERNEL_OUT)/drivers/staging/typec/tcpm.ko \
+                            $(KERNEL_OUT)/drivers/usb/cdns3/cdns3.ko \
+                            $(KERNEL_OUT)/drivers/usb/chipidea/ci_hdrc.ko \
+                            $(KERNEL_OUT)/drivers/usb/chipidea/ci_hdrc_imx.ko \
+                            $(KERNEL_OUT)/drivers/usb/chipidea/usbmisc_imx.ko \
+                            $(KERNEL_OUT)/drivers/usb/core/usbcore.ko \
+                            $(KERNEL_OUT)/drivers/usb/host/xhci-hcd.ko \
+                            $(KERNEL_OUT)/drivers/usb/host/ehci-hcd.ko \
+                            $(KERNEL_OUT)/drivers/usb/storage/usb-storage.ko \
+                            $(KERNEL_OUT)/drivers/usb/typec/typec.ko \
+                            $(KERNEL_OUT)/drivers/scsi/sd_mod.ko \
+                            $(KERNEL_OUT)/drivers/bluetooth/mx8_bt_rfkill.ko \
+                            $(KERNEL_OUT)/drivers/hid/hid-multitouch.ko \
+                            $(KERNEL_OUT)/drivers/gpu/drm/bridge/it6263.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/imx8_prg.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/imx8_dprc.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/imx8_pc.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/dpu-blit/imx-dpu-blit.ko \
+                            $(KERNEL_OUT)/drivers/gpu/drm/imx/dpu/imx-dpu-render.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/dpu/imx-dpu-core.ko \
+                            $(KERNEL_OUT)/drivers/gpu/drm/imx/dpu/imx-dpu-crtc.ko \
+                            $(KERNEL_OUT)/drivers/media/platform/imx8/max9286_gmsl.ko \
+                            $(KERNEL_OUT)/drivers/media/platform/imx8/ov5640_mipi_v3.ko \
+                            $(KERNEL_OUT)/drivers/media/platform/imx8/mxc-mipi-csi2.ko \
+                            $(KERNEL_OUT)/drivers/media/platform/imx8/mxc-media-dev.ko \
+                            $(KERNEL_OUT)/drivers/media/platform/imx8/mxc-capture.ko \
+
+BOARD_RECOVERY_KERNEL_MODULES += \
+                            $(KERNEL_OUT)/drivers/gpu/drm/bridge/it6263.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/imx8_prg.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/imx8_dprc.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/imx8_pc.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/dpu-blit/imx-dpu-blit.ko \
+                            $(KERNEL_OUT)/drivers/gpu/drm/imx/dpu/imx-dpu-render.ko \
+                            $(KERNEL_OUT)/drivers/gpu/imx/dpu/imx-dpu-core.ko \
+                            $(KERNEL_OUT)/drivers/gpu/drm/imx/dpu/imx-dpu-crtc.ko
+endif
+
 # Qcom 1CQ(QCA6174) BT
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/fsl/imx8q/mek_8q/bluetooth
 BOARD_HAVE_BLUETOOTH_QCOM := true
@@ -91,12 +134,21 @@ USE_GPU_ALLOCATOR := false
 # define frame buffer count
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 
+ifeq ($(PRODUCT_IMX_CAR),true)
+KERNEL_NAME := Image.lz4
+else
 KERNEL_NAME := Image
+endif
 # ecockpit A72 reduce CMA to 500MB
 BOARD_KERNEL_CMDLINE := init=/init androidboot.hardware=freescale androidboot.fbTileSupport=enable cma=500M@0xd60M-0xf60M androidboot.primary_display=imx-drm firmware_class.path=/vendor/firmware transparent_hugepage=never androidboot.selinux=permissive loop.max_part=7
 
 # Default wificountrycode
 BOARD_KERNEL_CMDLINE += androidboot.wificountrycode=CN
+
+ifeq ($(PRODUCT_IMX_CAR),true)
+BOARD_KERNEL_CMDLINE += galcore.contiguousSize=33554432
+endif
+
 # ecockpit A72 specific
 BOARD_KERNEL_CMDLINE += androidboot.console=ttyLP2
 
@@ -107,12 +159,20 @@ endif
 endif
 
 BOARD_PREBUILT_DTBOIMAGE := out/target/product/mek_8q/dtbo-imx8qm.img
-# imx8qm standard android; MIPI-HDMI display
+
+ifeq ($(PRODUCT_IMX_CAR),true)
+TARGET_BOARD_DTS_CONFIG := imx8qm:fsl-imx8qm-mek-a72-car.dtb
+else
 TARGET_BOARD_DTS_CONFIG := imx8qm:fsl-imx8qm-mek-a72.dtb
+endif
 
 # in ecockpit u-boot is built externally
 
+ifeq ($(PRODUCT_IMX_CAR),true)
+TARGET_KERNEL_DEFCONFIG := ecockpit_android_car_defconfig
+else
 TARGET_KERNEL_DEFCONFIG := ecockpit_android_defconfig
+endif
 include device/fsl/imx8q/mek_8q/build_id_eco.mk
 
 BOARD_SEPOLICY_DIRS := \
@@ -137,6 +197,10 @@ BOARD_AVB_ENABLE := true
 TARGET_USES_MKE2FS := true
 
 TARGET_BOARD_KERNEL_HEADERS := device/fsl/common/kernel-headers
+
+ifeq ($(PRODUCT_IMX_CAR),true)
+BOARD_HAVE_IMX_EVS := true
+endif
 
 # define board type
 BOARD_TYPE := MEK

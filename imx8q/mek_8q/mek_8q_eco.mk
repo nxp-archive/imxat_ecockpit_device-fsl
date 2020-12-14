@@ -22,6 +22,13 @@ PRODUCT_NAME := mek_8q_eco
 
 PRODUCT_FULL_TREBLE_OVERRIDE := true
 
+#Enable this to choose 32 bit user space build
+#IMX8_BUILD_32BIT_ROOTFS := true
+
+# Include keystore attestation keys and certificates.
+-include $(IMX_SECURITY_PATH)/attestation/imx_attestation.mk
+
+
 # Copy device related config and binary to board
 PRODUCT_COPY_FILES += \
     $(FSL_PROPRIETARY_PATH)/fsl-proprietary/gpu-viv/lib/egl/egl.cfg:$(TARGET_COPY_OUT_VENDOR)/lib/egl/egl.cfg \
@@ -37,6 +44,10 @@ PRODUCT_COPY_FILES += \
     device/fsl/common/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
     device/fsl/common/wifi/wpa_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/wpa_supplicant_overlay.conf
 
+# Copy rpmb test key and AVB test public key
+PRODUCT_COPY_FILES += \
+    device/fsl/common/security/rpmb_key_test.bin:rpmb_key_test.bin \
+    device/fsl/common/security/testkey_public_rsa4096.bin:testkey_public_rsa4096.bin
 
 ifeq ($(PRODUCT_IMX_CAR),true)
 PRODUCT_COPY_FILES += \
@@ -57,6 +68,18 @@ PRODUCT_COPY_FILES += \
     $(IMX_DEVICE_PATH)/early.init_car.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/early.init.cfg \
     $(IMX_DEVICE_PATH)/required_hardware_auto.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/required_hardware.xml \
     device/fsl/imx8q/init.recovery.freescale.car.rc:root/init.recovery.freescale.rc
+
+ifeq ($(PRODUCT_IMX_CAR_M4),true)
+PRODUCT_COPY_FILES += \
+    $(IMX_DEVICE_PATH)/setup.main.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/setup.main.cfg \
+    $(IMX_DEVICE_PATH)/setup.core.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/setup.core.cfg \
+    $(IMX_DEVICE_PATH)/init_car_m4.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.car_additional.rc
+else
+PRODUCT_COPY_FILES += \
+    $(IMX_DEVICE_PATH)/setup.main.car2.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/setup.main.cfg \
+    $(IMX_DEVICE_PATH)/setup.core.car2.cfg:$(TARGET_COPY_OUT_VENDOR)/etc/setup.core.cfg \
+    $(IMX_DEVICE_PATH)/init_car_no_m4.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.car_additional.rc
+endif #PRODUCT_IMX_CAR_M4
 else
 PRODUCT_COPY_FILES += \
     $(IMX_DEVICE_PATH)/init.freescale.emmc.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.freescale.emmc.rc \
@@ -194,7 +217,7 @@ PRODUCT_PACKAGES += \
     configstore@1.1.policy
 
 ifneq ($(PRODUCT_IMX_CAR),true)
-# imx8 sensor HAL.
+# imx8 sensor HAL
 PRODUCT_PACKAGES += \
     sensors.imx8 \
     android.hardware.sensors@1.0-impl \
@@ -276,3 +299,9 @@ PRODUCT_PROPERTY_OVERRIDES += ro.frp.pst=/dev/block/by-name/presistdata
 PRODUCT_COMPATIBLE_PROPERTY_OVERRIDE := true
 
 BOARD_VNDK_VERSION := current
+
+ifneq ($(PRODUCT_IMX_CAR),true)
+# Included GMS package
+$(call inherit-product-if-exists, vendor/partner_gms/products/gms.mk)
+endif
+

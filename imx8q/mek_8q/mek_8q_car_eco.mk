@@ -4,10 +4,12 @@
 IMX_DEVICE_PATH := device/fsl/imx8q/mek_8q
 
 PRODUCT_IMX_CAR := true
+# build m4 image from source code
+PRODUCT_IMX_CAR_M4_BUILD := true
+#with m4 when build uboot
+PRODUCT_IMX_CAR_M4 ?= true
 
 include device/fsl/imx8q/mek_8q/mek_8q_eco.mk
-# Include keystore attestation keys and certificates.
-#-include $(IMX_SECURITY_PATH)/attestation/imx_attestation.mk
 
 # Overrides
 PRODUCT_NAME := mek_8q_car_eco
@@ -16,7 +18,7 @@ PRODUCT_PACKAGE_OVERLAYS := $(IMX_DEVICE_PATH)/overlay_car packages/services/Car
 PRODUCT_COPY_FILES += \
     packages/services/Car/car_product/init/init.bootstat.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.bootstat.rc \
     packages/services/Car/car_product/init/init.car.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/hw/init.car.rc \
-    system/core/rootdir/init.zygote_auto.rc:root/init.zygote_auto.rc \
+    system/core/rootdir/init.zygote_auto.rc:root/init.zygote_auto.rc
 
 # ONLY devices that meet the CDD's requirements may declare these features
 PRODUCT_COPY_FILES += \
@@ -47,8 +49,20 @@ PRODUCT_PACKAGES += \
 # Use special ro.zygote to make default init.rc didn't load default zygote rc
 PRODUCT_PRODUCT_PROPERTIES += ro.zygote=zygote_auto
 
-# Simulate the vehical rpmsg register event for non m4 car image
-PRODUCT_PROPERTY_OVERRIDES += \
-    vendor.vehicle.register=1 \
-    vendor.evs.video.ready=1
 
+#no bootanimation since it is handled in m4 image
+PRODUCT_PROPERTY_OVERRIDES += \
+    debug.sf.nobootanimation=1
+
+# Specify rollback index for bootloader and for AVB
+ifneq ($(AVB_RBINDEX),)
+BOARD_AVB_ROLLBACK_INDEX := $(AVB_RBINDEX)
+else
+BOARD_AVB_ROLLBACK_INDEX := 0
+endif
+
+ifneq ($(BOOTLOADER_RBINDEX),)
+export ROLLBACK_INDEX_IN_CONTAINER := $(BOOTLOADER_RBINDEX)
+else
+export ROLLBACK_INDEX_IN_CONTAINER := 0
+endif
