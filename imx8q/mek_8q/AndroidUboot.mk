@@ -39,6 +39,10 @@ else
 UBOOT_M4_BIN:
 endif # PRODUCT_IMX_CAR_M4_BUILD
 
+ifeq ($(PRODUCT_IMX_ECO),true)
+define build_imx_uboot
+endef
+else
 define build_imx_uboot
 	if [ `echo $(2) | cut -d '-' -f1` == "imx8qm" ] && [ `echo $(2) | cut -d '-' -f2` != "xen" ]; then \
 		MKIMAGE_PLATFORM=`echo iMX8QM`; \
@@ -164,5 +168,5 @@ define build_imx_uboot
 		rm $(PRODUCT_OUT)/u-boot-$(strip $(2)).imx; \
 	fi;
 endef
-
+endif
 

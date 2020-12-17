@@ -118,6 +118,8 @@ TARGET_SELECT_KEY := 28
 # we don't support sparse image.
 TARGET_USERIMAGES_SPARSE_EXT_DISABLED := false
 
+UBOOT_POST_PROCESS := true
+
 # camera hal v3
 IMX_CAMERA_HAL_V3 := true
 
@@ -160,13 +162,14 @@ endif
 
 BOARD_PREBUILT_DTBOIMAGE := out/target/product/mek_8q/dtbo-imx8qm.img
 
-ifeq ($(PRODUCT_IMX_CAR),true)
+ifeq ($(PRODUCT_IMX_CAR_M4),true)
 TARGET_BOARD_DTS_CONFIG := imx8qm:fsl-imx8qm-mek-a72-car.dtb
 else
 TARGET_BOARD_DTS_CONFIG := imx8qm:fsl-imx8qm-mek-a72.dtb
 endif
 
-# in ecockpit u-boot is built externally
+# need to build u-boot for M4 image
+TARGET_BOOTLOADER_CONFIG := imx8qm:imx8qm_mek_a72_android_defconfig
 
 ifeq ($(PRODUCT_IMX_CAR),true)
 TARGET_KERNEL_DEFCONFIG := ecockpit_android_car_defconfig

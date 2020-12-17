@@ -1,9 +1,7 @@
 LOCAL_PATH := $(call my-dir)
 
 include device/fsl/common/build/kernel.mk
-ifneq ($(PRODUCT_IMX_ECO),true)
 include device/fsl/common/build/uboot.mk
-endif
 include device/fsl/common/build/dtbo.mk
 include device/fsl/common/build/imx-recovery.mk
 include device/fsl/common/build/gpt.mk
